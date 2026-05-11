@@ -1,5 +1,5 @@
 {
-  "name": "lib-qqwry",
+  "name": "@yuyuqaq/lib-qqwry",
   "version": "2.0.0",
   "description": "Using NodeJS analytical IP Library (qqwry.dat/qqwry.ipdb) module.",
   "type": "module",
@@ -19,8 +19,8 @@
     }
   },
   "bin": {
-    "qqwry": "./dist/qqwry.cjs",
-    "lib-qqwry": "./dist/qqwry.cjs"
+    "qqwry": "dist/qqwry.cjs",
+    "lib-qqwry": "dist/qqwry.cjs"
   },
   "files": [
     "dist",
@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/WhY15w/lib-qqwry.git"
+    "url": "git+https://github.com/WhY15w/lib-qqwry.git"
   },
   "keywords": [
     "qqwry",
