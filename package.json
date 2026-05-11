@@ -25,14 +25,14 @@
   "license": "BSD",
   "dependencies": {
     "chalk": "^2.4.2",
-    "commander": "^2.19.0",
-    "gbk.js": "^0.2.0",
+    "commander": "^2.20.3",
+    "gbk.js": "^0.2.4",
     "ipip-ipdb": "^0.6.0",
     "progress": "^2.0.3",
     "to-regex": "^3.0.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.4"
+    "@babel/cli": "^7.28.6",
+    "@babel/core": "^7.29.0"
   }
 }
