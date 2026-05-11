@@ -1,7 +1,10 @@
 import { bench, describe } from "vitest";
 import libqqwry from "../src/index.js";
 
-const qqwry = libqqwry(true); // speed mode
+const DAT_PATH = "./data/qqwry.dat";
+const IPDB_PATH = "./data/qqwry.ipdb";
+
+const qqwry = libqqwry(DAT_PATH, true); // speed mode
 const ips: string[] = [];
 
 // Generate 100 random IPs
@@ -29,7 +32,7 @@ describe("searchIPScope benchmark", () => {
   });
 });
 
-const ipdb = libqqwry.ipdb();
+const ipdb = libqqwry.ipdb(IPDB_PATH);
 describe("ipdb benchmark", () => {
   bench("single IP lookup x100 (ipdb)", () => {
     for (const ip of ips) {

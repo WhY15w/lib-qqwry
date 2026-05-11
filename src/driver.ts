@@ -1,6 +1,4 @@
 import { Readable } from "node:stream";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
 import { decode as GBK_decode } from "gbk.js";
 import { fileCmd, bufferCmd } from "./data-cmd";
 import getFormatFn from "./format";
@@ -13,15 +11,11 @@ import type {
   QqwryCallable,
 } from "./types";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 const IP_RECORD_LENGTH = 7;
 const REDIRECT_MODE_1 = 1;
 const REDIRECT_MODE_2 = 2;
 const IP_REGEXP =
   /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
-
-const defaultDatPath = path.join(__dirname, "../data/qqwry.dat");
 
 const unArea = "";
 const unCountry = "";
@@ -110,18 +104,10 @@ class QqwryDriverImpl {
   private cmdFactory: CmdFactory;
   private _speed: boolean;
 
-  constructor(speed?: boolean | string, dataPath?: boolean | string) {
-    let isspeed: boolean;
-    if (typeof speed === "string") {
-      this.dataPath = speed || defaultDatPath;
-      isspeed = !!dataPath;
-    } else {
-      isspeed = !!speed;
-      this.dataPath =
-        (typeof dataPath === "string" ? dataPath : undefined) || defaultDatPath;
-    }
-    this._speed = isspeed;
-    this.cmdFactory = getCmdFactory(isspeed, this.dataPath);
+  constructor(dataPath: string, speed?: boolean) {
+    this.dataPath = dataPath;
+    this._speed = !!speed;
+    this.cmdFactory = getCmdFactory(this._speed, this.dataPath);
     const cmd = this.cmdFactory();
     this.ipBegin = cmd.readUIntLE(0, 4);
     this.ipEnd = cmd.readUIntLE(4, 4);
@@ -407,16 +393,11 @@ function wrapQqwry(driver: QqwryDriverImpl): QqwryCallable {
 
 /**
  * 创建 QqwryDriver 实例 (返回可调用的包装函数)
- * @param speed 开启极速模式 (或自定义IP库路径)
- * @param dataPath 自定义IP库路径
+ * @param dataPath qqwry.dat 文件路径
+ * @param speed 开启极速模式
  */
-function createQqwry(speed?: boolean, dataPath?: string): QqwryCallable;
-function createQqwry(dataPath: string, speed?: boolean): QqwryCallable;
-function createQqwry(
-  speed?: boolean | string,
-  dataPath?: boolean | string,
-): QqwryCallable {
-  const driver = new QqwryDriverImpl(speed, dataPath);
+function createQqwry(dataPath: string, speed?: boolean): QqwryCallable {
+  const driver = new QqwryDriverImpl(dataPath, speed);
   return wrapQqwry(driver);
 }
 

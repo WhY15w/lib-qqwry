@@ -13,21 +13,21 @@ pnpm build
 
 ## Data file dependency
 
-- The library reads `data/qqwry.dat` at runtime (binary IP database). Default path is resolved relative to the built output in `dist/`: `path.join(__dirname, "../data/qqwry.dat")`.
-- `data/qqwry.ipdb` is the ipdb-format database (default path: `path.join(__dirname, "../data/qqwry.ipdb")`).
+- The library requires users to provide their own data files at runtime.
+- `qqwry.dat` is the binary IP database (qqwry format). Pass the path to `libqqwry(dataPath)` or `libqqwry.init(dataPath)`.
+- `qqwry.ipdb` is the ipdb-format database. Pass the path to `libqqwry.ipdb(dataPath)`.
 - The library will throw if the requested data file is missing or unreadable.
 
 ## Commands
 
-| Task        | Command                        |
-| ----------- | ------------------------------ |
-| Install deps | `pnpm install`                |
-| Build       | `pnpm run build`              |
-| Run tests   | `pnpm test`                   |
-| Test watch  | `pnpm run test:watch`         |
-| Benchmark   | `pnpm run test:bench`         |
-| Run CLI     | `node ./dist/qqwry.cjs search 8.8.8.8` |
-| Format/lint | *None configured*              |
+| Task         | Command               |
+| ------------ | --------------------- |
+| Install deps | `pnpm install`        |
+| Build        | `pnpm run build`      |
+| Run tests    | `pnpm test`           |
+| Test watch   | `pnpm run test:watch` |
+| Benchmark    | `pnpm run test:bench` |
+| Format/lint  | _None configured_     |
 
 ## Architecture
 
@@ -38,15 +38,13 @@ pnpm build
   - `data-cmd.ts` — `fileCmd` / `bufferCmd` I/O factories
   - `format.ts` — output formatters (`text`, `csv`, `json`, `object`)
   - `ipdb-cmd.ts` — ipdb Reader wrapper (uses `createRequire` for CJS interop)
-  - `qqwry-cli.ts` — CLI entrypoint (commander v13, single-file with inline subcommands)
   - `shims/gbk.d.ts` — type declaration for `gbk.js`
 - **Build output**: `dist/` (dual CJS + ESM)
   - `dist/index.cjs` — CJS bundle
   - `dist/index.js` — ESM bundle
   - `dist/index.d.ts` / `dist/index.d.cts` — type declarations
-  - `dist/qqwry.cjs` — CLI binary
 - **Entry**: `dist/index.cjs` (CJS) / `dist/index.js` (ESM) — exports a callable function with static helpers.
-  - `const qqwry = require("lib-qqwry")()` — returns a wrapped callable: `qqwry(ip)`, `qqwry(begin, end)`, `qqwry(begin, end, callback)`.
+  - `const qqwry = require("lib-qqwry")("./data/qqwry.dat")` — dataPath is required, returns a wrapped callable: `qqwry(ip)`, `qqwry(begin, end)`, `qqwry(begin, end, callback)`.
   - Static helpers: `libqqwry.ipToInt()`, `.intToIP()`, `.ipEndianChange()`, `.ipdb()`, `.init()`.
 - **Two I/O modes**:
   - `fileCmd` (default): reads from disk via `fs.openSync`/`fs.readSync`. Lower memory.

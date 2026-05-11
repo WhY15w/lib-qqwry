@@ -1,5 +1,6 @@
 # lib-qqwry
 
+> [!TIP]
 > 本项目基于 [cnwhy/lib-qqwry](https://github.com/cnwhy/lib-qqwry) 二次开发，感谢原作者 [@cnwhy](https://github.com/cnwhy) 的优秀工作。
 
 `lib-qqwry` 是一个高效的纯真IP库查询引擎，支持 `qqwry.dat` 和 `qqwry.ipdb` 两种数据格式。
@@ -10,7 +11,6 @@
 - **支持 ESM + CJS 双模**输出
 - **新增 ipdb 格式支持**（`libqqwry.ipdb()`）
 - **现代化构建工具链** (tsup + vitest)
-- **CLI 升级**至 commander v13
 
 ## 安装
 
@@ -18,25 +18,20 @@
 npm i lib-qqwry
 ```
 
+## 数据文件
+
+使用本库前需要自行准备数据文件：
+
+- [纯真IP库 (qqwry.dat)](https://github.com/nmgliangwei/qqwry)
+- [ipip.net ipdb 格式](https://github.com/nmgliangwei/qqwry.ipdb)
+
 ## 使用
-
-### CLI (v1.3.0+)
-
-将 `lib-qqwry` 安装到全局后可使用命令行模式：
-
-```bash
-# 查询IP
-qqwry search 8.8.8.8
-
-# 反查IP段
-qqwry find 谷歌
-```
 
 ### Node (CJS)
 
 ```js
 const libqqwry = require("lib-qqwry");
-const qqwry = libqqwry(); // 初始化IP库解析器
+const qqwry = libqqwry("./data/qqwry.dat"); // dataPath 必填
 qqwry.speed(); // 启用急速模式
 
 const result = qqwry.searchIP("202.103.102.10"); // 查询IP信息
@@ -57,16 +52,16 @@ qqwry
 
 ```js
 import libqqwry from "lib-qqwry";
-const qqwry = libqqwry(true, "./data/qqwry.dat");
+const qqwry = libqqwry("./data/qqwry.dat", true); // dataPath, speed
 const result = qqwry.searchIP("202.103.102.10");
 ```
 
-### ipdb 格式 (v2.0+)
+### ipdb 格式
 
 ```js
 import libqqwry from "lib-qqwry";
 
-const ipdb = libqqwry.ipdb("./data/qqwry.ipdb");
+const ipdb = libqqwry.ipdb("./data/qqwry.ipdb"); // dataPath 必填
 const result = ipdb.searchIP("8.8.8.8");
 // { country_name: '美国', region_name: '加利福尼亚州圣克拉拉县山景市谷歌公司' }
 ```
@@ -100,22 +95,24 @@ IP地址转数值：
 4278190081 // 0xFF000001
 ```
 
-### libqqwry(speed, dataPath) / libqqwry.init(speed, dataPath)
+### libqqwry(dataPath, speed?) / libqqwry.init(dataPath, speed?)
 
-实例化一个IP库解析器：
+实例化一个 qqwry.dat 格式解析器：
 
+- `dataPath`: IP库路径，**必填**
 - `speed`: 是否开启急速模式（将数据文件读入内存），可选，默认 `false`
-- `dataPath`: IP库路径，可选，默认 `path.join(__dirname, "../data/qqwry.dat")`
 
 ```js
-const qqwry = libqqwry(true, "./data/qqwry.dat");
+const qqwry = libqqwry("./data/qqwry.dat");
+// 或
+const qqwry = libqqwry("./data/qqwry.dat", true); // 急速模式
 ```
 
-### libqqwry.ipdb(dataPath, options)
+### libqqwry.ipdb(dataPath, options?)
 
 实例化 ipdb 格式解析器：
 
-- `dataPath`: ipdb 文件路径
+- `dataPath`: ipdb 文件路径，**必填**
 - `options.language`: 查询语言，可选，默认 `"CN"`
 
 ```js
@@ -185,13 +182,6 @@ qqwry
 ### qqwry.unSpeed()
 
 停用急速模式（切换回文件直接读取模式）。
-
-## 数据文件
-
-项目 `data/` 目录下已包含测试用数据文件，你也可以自行下载最新数据：
-
-- [纯真IP库 (qqwry.dat)](https://www.cz88.net/) — 存放至 `data/qqwry.dat`
-- [ipip.net ipdb 格式](https://www.ipip.net/) — 存放至 `data/qqwry.ipdb`
 
 ## License
 
