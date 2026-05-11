@@ -3,6 +3,9 @@ import { describe, it, expect } from "vitest";
 // Test modules using CJS (vitest handles interop)
 import libqqwry from "../src/index.js";
 
+const DAT_PATH = "./data/qqwry.dat";
+const IPDB_PATH = "./data/qqwry.ipdb";
+
 describe("lib-qqwry", () => {
   describe("static helpers", () => {
     it("ipToInt converts IP string to integer", () => {
@@ -54,31 +57,31 @@ describe("lib-qqwry", () => {
 
   describe("init", () => {
     it("init() creates a callable instance", () => {
-      const q = libqqwry.init();
+      const q = libqqwry.init(DAT_PATH);
       expect(typeof q).toBe("function");
       expect(typeof q.searchIP).toBe("function");
     });
 
-    it("init(true) enables speed mode", () => {
-      const q = libqqwry.init(true);
+    it("init() with speed mode", () => {
+      const q = libqqwry.init(DAT_PATH, true);
       expect(typeof q).toBe("function");
     });
 
     it("init(customPath) uses custom dat path", () => {
-      const q = libqqwry.init("./data/qqwry.dat");
+      const q = libqqwry.init(DAT_PATH);
       expect(typeof q).toBe("function");
       expect(typeof q.searchIP).toBe("function");
     });
   });
 
   describe("default export (callable constructor)", () => {
-    it("libqqwry() returns a callable function", () => {
-      const q = libqqwry();
+    it("libqqwry(datPath) returns a callable function", () => {
+      const q = libqqwry(DAT_PATH);
       expect(typeof q).toBe("function");
     });
 
     it("callable with no args returns special IP info", () => {
-      const q = libqqwry();
+      const q = libqqwry(DAT_PATH);
       const result = q();
       expect(result).toBeDefined();
       expect(result.Country).toBeDefined();
@@ -87,7 +90,7 @@ describe("lib-qqwry", () => {
   });
 
   describe("searchIP", () => {
-    const q = libqqwry();
+    const q = libqqwry(DAT_PATH);
 
     it("returns IP info for 8.8.8.8", () => {
       const result = q.searchIP("8.8.8.8");
@@ -122,7 +125,7 @@ describe("lib-qqwry", () => {
   });
 
   describe("searchIPScope", () => {
-    const q = libqqwry();
+    const q = libqqwry(DAT_PATH);
 
     it("returns IP range info", () => {
       const results = q.searchIPScope("8.8.8.0", "8.8.8.8");
@@ -145,7 +148,7 @@ describe("lib-qqwry", () => {
 
   describe("searchIPScope async", () => {
     it("supports async callback pattern", async () => {
-      const q = libqqwry();
+      const q = libqqwry(DAT_PATH);
       const data = await new Promise((resolve, reject) => {
         q.searchIPScope("8.8.8.0", "8.8.8.8", (err, results) => {
           if (err) reject(err);
@@ -157,7 +160,7 @@ describe("lib-qqwry", () => {
     });
 
     it("callable with callback delegates to async searchIPScope", async () => {
-      const q = libqqwry();
+      const q = libqqwry(DAT_PATH);
       const data = await new Promise((resolve, reject) => {
         q("8.8.8.0", "8.8.8.8", (err, results) => {
           if (err) reject(err);
@@ -170,7 +173,7 @@ describe("lib-qqwry", () => {
 
   describe("searchIPScopeStream", () => {
     it("streams data in text mode", async () => {
-      const q = libqqwry();
+      const q = libqqwry(DAT_PATH);
       const stream = q.searchIPScopeStream("8.8.8.8", "8.8.8.8");
 
       const chunks: string[] = [];
@@ -181,7 +184,7 @@ describe("lib-qqwry", () => {
     });
 
     it("streams data in csv mode", async () => {
-      const q = libqqwry();
+      const q = libqqwry(DAT_PATH);
       const stream = q.searchIPScopeStream("8.8.8.8", "8.8.8.8", {
         format: "csv",
       });
@@ -195,7 +198,7 @@ describe("lib-qqwry", () => {
     });
 
     it("streams data in csv mode with header", async () => {
-      const q = libqqwry();
+      const q = libqqwry(DAT_PATH);
       const stream = q.searchIPScopeStream("8.8.8.8", "8.8.8.8", {
         format: "csv",
         outHeader: true,
@@ -209,7 +212,7 @@ describe("lib-qqwry", () => {
     });
 
     it("streams data in json mode", async () => {
-      const q = libqqwry();
+      const q = libqqwry(DAT_PATH);
       const stream = q.searchIPScopeStream("8.8.8.8", "8.8.8.8", {
         format: "json",
         outHeader: true,
@@ -223,7 +226,7 @@ describe("lib-qqwry", () => {
     });
 
     it("streams data in object mode", async () => {
-      const q = libqqwry();
+      const q = libqqwry(DAT_PATH);
       const stream = q.searchIPScopeStream("8.8.8.8", "8.8.8.8", {
         format: "object",
       });
@@ -239,7 +242,7 @@ describe("lib-qqwry", () => {
 
   describe("speed / unSpeed", () => {
     it("speed() enables speed mode (chaining)", () => {
-      const q = libqqwry();
+      const q = libqqwry(DAT_PATH);
       const result = q.speed();
       expect(result).toBe(q);
 
@@ -249,7 +252,7 @@ describe("lib-qqwry", () => {
     });
 
     it("unSpeed() disables speed mode (chaining)", () => {
-      const q = libqqwry(true); // start with speed
+      const q = libqqwry(DAT_PATH, true); // start with speed
       const result = q.unSpeed();
       expect(result).toBe(q);
 
@@ -260,12 +263,12 @@ describe("lib-qqwry", () => {
 
   describe("ipdb driver", () => {
     it("creates ipdb driver", () => {
-      const ipdb = libqqwry.ipdb();
+      const ipdb = libqqwry.ipdb(IPDB_PATH);
       expect(typeof ipdb).toBe("function");
     });
 
     it("returns fields", () => {
-      const ipdb = libqqwry.ipdb();
+      const ipdb = libqqwry.ipdb(IPDB_PATH);
       const fields = ipdb.fields();
       expect(Array.isArray(fields)).toBe(true);
       expect(fields).toContain("country_name");
@@ -273,45 +276,45 @@ describe("lib-qqwry", () => {
     });
 
     it("returns languages", () => {
-      const ipdb = libqqwry.ipdb();
+      const ipdb = libqqwry.ipdb(IPDB_PATH);
       const langs = ipdb.languages();
       expect(langs).toContain("CN");
     });
 
     it("returns build time", () => {
-      const ipdb = libqqwry.ipdb();
+      const ipdb = libqqwry.ipdb(IPDB_PATH);
       const bt = ipdb.buildTime();
       expect(typeof bt).toBe("number");
       expect(bt).toBeGreaterThan(0);
     });
 
     it("looks up IP", () => {
-      const ipdb = libqqwry.ipdb();
+      const ipdb = libqqwry.ipdb(IPDB_PATH);
       const result = ipdb("8.8.8.8");
       expect(result.ip).toBe("8.8.8.8");
       expect(result.country_name).toBeTruthy();
     });
 
     it("looks up IP with numeric input", () => {
-      const ipdb = libqqwry.ipdb();
+      const ipdb = libqqwry.ipdb(IPDB_PATH);
       const result = ipdb(134744072);
       expect(result.ip).toBe("8.8.8.8");
     });
 
     it("speed/unSpeed are no-ops", () => {
-      const ipdb = libqqwry.ipdb();
+      const ipdb = libqqwry.ipdb(IPDB_PATH);
       expect(ipdb.speed()).toBe(ipdb);
       expect(ipdb.unSpeed()).toBe(ipdb);
     });
 
     it("ipdb with no args returns version info", () => {
-      const ipdb = libqqwry.ipdb();
+      const ipdb = libqqwry.ipdb(IPDB_PATH);
       const result = ipdb();
       expect(result.ip).toBeTruthy();
     });
 
     it("callable with two args passes language", () => {
-      const ipdb = libqqwry.ipdb();
+      const ipdb = libqqwry.ipdb(IPDB_PATH);
       const result = ipdb("8.8.8.8", "CN");
       expect(result.ip).toBe("8.8.8.8");
     });

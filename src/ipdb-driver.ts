@@ -1,20 +1,15 @@
-import { fileURLToPath } from "node:url";
-import path from "node:path";
 import ipdbCmd from "./ipdb-cmd";
 import { intToIP } from "./driver";
 import type { IpdbCmdFactory, IpdbCallable } from "./types";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const defaultIpdbPath = path.join(__dirname, "../data/qqwry.ipdb");
 
 class IpdbDriverImpl {
   readonly dataPath: string;
   readonly language: string;
   private cmdFactory: IpdbCmdFactory;
 
-  constructor(dataPath?: string, options?: { language?: string }) {
+  constructor(dataPath: string, options?: { language?: string }) {
     const opts = options || {};
-    this.dataPath = dataPath || defaultIpdbPath;
+    this.dataPath = dataPath;
     this.language = opts.language || "CN";
     this.cmdFactory = ipdbCmd(this.dataPath);
   }
@@ -89,7 +84,7 @@ function wrapIpdb(driver: IpdbDriverImpl): IpdbCallable {
  * @param options 选项
  */
 export function createIpdb(
-  dataPath?: string,
+  dataPath: string,
   options?: { language?: string },
 ): IpdbCallable {
   const driver = new IpdbDriverImpl(dataPath, options);

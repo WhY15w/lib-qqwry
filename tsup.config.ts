@@ -12,13 +12,4 @@ export default defineConfig([
     treeshake: true,
     noExternal: ["gbk.js"],
   },
-  {
-    entry: { qqwry: "src/qqwry-cli.ts" },
-    format: ["cjs"],
-    outDir: "dist",
-    clean: false,
-    treeshake: true,
-    banner: { js: "#!/usr/bin/env node" },
-    external: ["../package.json"],
-  },
 ]);

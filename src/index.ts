@@ -7,19 +7,20 @@ import type { QqwryCallable, IpdbCallable, IpdbOptions } from "./types";
  * 纯真IP库(qqwry.dat) Node.js 解析引擎
  */
 
-const libqqwry = Object.assign(createQqwry, {
-  ipToInt,
-  intToIP,
-  ipEndianChange,
-  ipdb(dataPath?: string, options?: IpdbOptions): IpdbCallable {
-    return createIpdb(dataPath, options);
+const libqqwry = Object.assign(
+  (dataPath: string, speed?: boolean): QqwryCallable =>
+    createQqwry(dataPath, speed),
+  {
+    ipToInt,
+    intToIP,
+    ipEndianChange,
+    ipdb(dataPath: string, options?: IpdbOptions): IpdbCallable {
+      return createIpdb(dataPath, options);
+    },
+    init(dataPath: string, speed?: boolean): QqwryCallable {
+      return createQqwry(dataPath, speed);
+    },
   },
-  init(speed?: boolean | string, dataPath?: boolean | string): QqwryCallable {
-    return createQqwry(
-      speed as boolean | undefined,
-      dataPath as string | undefined,
-    );
-  },
-});
+);
 
 export default libqqwry;
