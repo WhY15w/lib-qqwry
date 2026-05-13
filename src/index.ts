@@ -3,7 +3,7 @@ import createQqwry, {
   intToIP,
   ipEndianChange,
 } from "./qqwry/index.js";
-import { createIpdb } from "./ipdb/index.js";
+import { createIpdb } from "./dat/index.js";
 import type { QqwryCallable, IpdbCallable, IpdbOptions } from "./types";
 
 /**
