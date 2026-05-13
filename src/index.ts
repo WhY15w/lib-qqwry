@@ -1,5 +1,9 @@
-import createQqwry, { ipToInt, intToIP, ipEndianChange } from "./driver";
-import { createIpdb } from "./ipdb-driver";
+import createQqwry, {
+  ipToInt,
+  intToIP,
+  ipEndianChange,
+} from "./qqwry/index.js";
+import { createIpdb } from "./ipdb/index.js";
 import type { QqwryCallable, IpdbCallable, IpdbOptions } from "./types";
 
 /**

@@ -1,7 +1,7 @@
 import { Readable } from "node:stream";
 import { decode as GBK_decode } from "gbk.js";
-import { fileCmd, bufferCmd } from "./data-cmd";
-import getFormatFn from "./format";
+import { fileCmd, bufferCmd } from "./data-cmd.js";
+import getFormatFn from "../format.js";
 import type {
   CmdApi,
   CmdFactory,
@@ -9,7 +9,7 @@ import type {
   IpScopeInfo,
   StreamOptions,
   QqwryCallable,
-} from "./types";
+} from "../types.js";
 
 const IP_RECORD_LENGTH = 7;
 const REDIRECT_MODE_1 = 1;

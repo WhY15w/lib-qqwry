@@ -1,6 +1,6 @@
-import ipdbCmd from "./ipdb-cmd";
-import { intToIP, attachSpeedUnSpeed } from "./driver";
-import type { IpdbCmdFactory, IpdbCallable } from "./types";
+import ipdbCmd from "./cmd.js";
+import { intToIP, attachSpeedUnSpeed } from "../qqwry/index.js";
+import type { IpdbCmdFactory, IpdbCallable } from "../types.js";
 
 class IpdbDriverImpl {
   readonly dataPath: string;

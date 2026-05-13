@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { isIPv4, isIPv6 } from "node:net";
-import type { IpdbCmdApi, IpdbCmdFactory } from "./types";
+import type { IpdbCmdApi, IpdbCmdFactory } from "../types.js";
 
 function ipToBytes(addr: string): number[] {
   if (isIPv4(addr)) {

@@ -1,5 +1,5 @@
 import * as fs from "node:fs";
-import type { CmdApi, CmdFactory } from "./types";
+import type { CmdApi, CmdFactory } from "../types.js";
 
 export function bufferCmd(path: string): CmdFactory {
   const buffer = fs.readFileSync(path);
